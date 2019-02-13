@@ -1,0 +1,36 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Build a Blog</h1>
+<form action='/newpost' method='post'>
+    <label>
+        Title for your new blog:
+        <input type="text" name='title' value="{{blogtitle}}" />
+    </label><p class="error">{{titleerror}}</p>
+    <br><br>
+    <label> Your new blog:
+        <textarea name="body">{{blogbody}} </textarea></label>
+    <p class="error">{{bodyerror}}</p>
+    <br><br><br>
+
+    <input type="submit" value='Add blog_title' />
+</form>
+
+
+<!--
+
+<hr />
+{% if blogpost|length == 0 %}
+<p>No tasks yet</p>
+{% else %}
+
+
+    {% for blog in blogpost %}
+    <h2 align="left">{{blog.title}}</h2>
+    {{blog.body}}
+    {% endfor %}
+
+
+{% endif %}
+{% endblock %}-->

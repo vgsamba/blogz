@@ -1,0 +1,24 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if blogpost|length == 0 %}
+    <p>No tasks yet</p>
+    {% else %}
+
+
+        {% for blog in blogpost %}
+<table>
+    <tr style="">
+        <td style="border:5px">
+        <a href="blog?id={{blog.id}}"><h2 align="left">{{blog.title}}</h2></a>
+        {{blog.body}}
+        </td>
+    </tr>
+</table>
+        {% endfor %}
+
+
+    {% endif %}
+{% endblock %}
