@@ -9,27 +9,45 @@
                 .error {
                 color: red;
                 }
+                footer{
+                padding: auto;
+                background-color: #ffa500;
+                text-align: center;
+                min-width: 300px;
+                margin-top: 10px;
+                  }
+
+                .class{
+                margin:10; padding:15}
+                body {
+
+
+                border: 25px solid #ffa500;
+                padding: 25px;
+                margin: 25px;
+                }
+                li {
+
+                padding:20px;
+                display: inline;
+                }
             </style>
+
     </head>
-        <body>
+        <body class="">
         <div style='float: right'>
             {% if 'username' in session %}
             Logged in as {{ session['username'] }}
-            <form action="/logoout">
-                <a href="/logout">Logout</a>
-                <a href="newpost">Add a Blog Entry</a>
-            </form>
-            {% else %}
-            <a href="login">login</a> | <a href="register">register</a>
             {% endif %}
         </div>
+        <h3><ul>
+           <li> <a href="/"> Home </a></li>
+            <li><a href="/blog">Main Blog Page</a></li>
 
-
-            <a href="/">Main Blog Page</a>
-
-            <!--<a href="newpost">Add a Blog Entry</a>
-            <a href="login">Login</a> -->
-            <!--<a href="/logout">Logout</a> -->
+            <li><a href="newpost">Add a Blog Entry</a></li>
+            <li><a href="login">Login</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul></h3>
 
         {% with messages=get_flashed_messages(with_categories=True) %}
         <ul>
@@ -42,5 +60,14 @@
             {% block content %}
             {% endblock %}
 
-        </body>
+
+    <footer>
+
+        <strong>Design &amp; Development</strong>
+        <br>
+        Contact me at <a href="mailto:test@test.com">abc@email.com</a><br>
+        @copyrights belong to samba
+        &copy; 2019
+    </footer>
+    </body>
 </html>

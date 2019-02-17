@@ -58,23 +58,10 @@ def login():
             #user_error='Username does not exists'
     return render_template('login.html',passworderror=passworderror) #user_error=user_error)
 
-#@app.route('/logout')
-#def logout():
-    #print('user logged is', username)
-    # remove the username from the session if it is there
-    ##print('user logedout i', username)
-    #return redirect(url_for('/blog')) #  basically remove user  email from session on logout
-
-    # if 'username' in session:
-    #     username = session['username']
-    #     userlogout=User.query.get(username)
-    #     db.session.delete(userlogout)
-    #     db.session.commit()
-
-#    return redirect('/blog')
 @app.route("/logout")  #TODO add a require_login function and decorate it with @app.before_request
 def logout():
-    del session['username']
+    #del session['username']
+    session.clear()
     return redirect('/blog')  # todo able to logout ---- done
 
   # TODO Validation FOR SIGN UP PAGE
@@ -125,36 +112,20 @@ def signup():      #create account
 
 
 
-@app.route('/')
-def index():
-    #username = request.args.get('username')
-    #users_list=User.query.filter_by(username)
-    #return render_template('index.html',users_list)
-    if username is not None:
-        user=User.query.filter_by(username=username).first()
-        users.append(user)
-        return render_template('blog.html', title="Build a blog!", users=users)
-
-        users = User.query.all()
-        return render_template('blog.html', title="Build a blog!", users=users)
-    users=User.query.order_by(User.username).all()
-    return render_template('index.html', title="Build Users!", users=users)
-
 @app.route('/blog', methods=['GET'])
 def blogdetails():
 
     blogid = request.args.get('id')
-    username = request.args.get('user')
-    users = []
-    #owner_idusername = request.args.get('owner_id.username')
+    selected_username = request.args.get('user')
+    #users = []
     if blogid is not None:
         blog = Blog.query.get(blogid)
         username=User.query.get(blog.owner_id) #todo get written by signature
         return render_template('BlogEntryDetails.html', title=blog.title, body=blog.body,owner_id= username.username)
-    if username is not None:
-        user=User.query.filter_by(username=username).first()
-        users.append(user)
-        return render_template('blog.html', title="Build a blog!", users=users)
+    if selected_username is not None:
+        user=User.query.filter_by(username=selected_username).first()
+        #users.append(user)
+        return render_template('singleUser.html', title="singleUser!", user=user)
 
     users = User.query.all()
     return render_template('blog.html', title="Build a blog!", users=users)
@@ -190,7 +161,36 @@ def newpost():
 
     return render_template('newpost.html', blogtitle=blog_title, blogbody=blog_body, owner=owner)
 
+@app.route('/')
+def index():
+    #return redirect('/blog')
+    #username = request.args.get('username')
+    #users_list=User.query.filter_by(username)
+    #return render_template('index.html',users_list)
+    # if username is not None:
+    #     user=User.query.filter_by(username=username).first()
+    #     users.append(user)
+    #     return render_template('blog.html', title="Build a blog!", users=users)
+    #
+    #     users = User.query.all()
+    #     return render_template('blog.html', title="Build a blog!", users=users)
+    selected_username = request.args.get('user')
+    users = []
+    if selected_username is None:
+        users=User.query.order_by(User.username).all()
+        return render_template('index.html', title="Build Users!", users=users)
+    user=User.query.filter_by(username=selected_username).first()
+    users.append(user)
+    return render_template('blog.html', title="Build a blog!", users=users)
 
+# TODO 5: modify this function to rely on a list of endpoints that users can visit without being redirected.
+
+
+@app.before_request  # TODO Require Login--to be covered
+def require_login():
+    print(request.endpoint)
+    if request.endpoint == 'newpost' and not 'username' in session:
+        return redirect("/login")
 
 
 if __name__ == '__main__':
