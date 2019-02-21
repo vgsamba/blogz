@@ -10,7 +10,7 @@
     </label><p class="error">{{usernameerror}}</p>
     <br><br>
     Password:
-    <label><input type="password" name='password' value="password" />
+    <label><input type="password" name='password' value="{{password}}"/>
     </label><p class="error">{{passworderror}}</p>
     <br><br><br>
 
@@ -21,4 +21,8 @@
 
 
 </form>
+
+{% if error %}
+<p class='error'>{{ error }}</p>
+{% endif %}
 {% endblock %}

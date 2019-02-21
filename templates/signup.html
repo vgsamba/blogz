@@ -1,3 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+
+
 <h1>Signup</h1>
 <form action="/signup" method="POST">
     <table>
@@ -25,3 +29,8 @@
     </table>
 </form>
 
+{% if error %}
+<p class='error'>{{ error }}</p>
+{% endif %}
+
+{% endblock %}

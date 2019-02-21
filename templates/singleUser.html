@@ -1,10 +1,10 @@
 
 {% extends "base.html" %}
-    <h1>User Posts</h1>
-    {% block content %}
 
+    {% block content %}
+    <h1>User Posts</h1>
 {% if user.blogs|length == 0 %}
-<p>No tasks yet for this user</p>
+<p>No tasks yet for this user {{user.username}}</p>
 {% endif %}
 
         {% for blog in user.blogs %}
@@ -15,7 +15,7 @@
                 <td style="border:5px">
                     <a href="blog?id={{blog.id}}"><h2 align="left">{{blog.title}}</h2></a>
                     {{blog.body}}
-                    <p> Written by single user <a href="blog?user={{user.username}}">{{user.username}}</a></p>
+                    <p> <i>Written by  <a href="blog?user={{user.username}}">{{user.username}}</a></i></p>
 
                 </td>
             </tr>

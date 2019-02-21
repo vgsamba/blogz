@@ -9,6 +9,10 @@ db = SQLAlchemy(app)  #app instance of sqlalchemy
 app.secret_key= "12345qwer"  #to be used with sessions
 
 
+# TODO
+#Create a Blog class for table blog with id title body  columns
+## and owner Id
+
 class Blog(db.Model):  # inherits basic funtionality fromm MODEL
 
     id = db.Column(db.Integer, primary_key=True)
@@ -21,6 +25,11 @@ class Blog(db.Model):  # inherits basic funtionality fromm MODEL
         self.body = body
         self.owner = owner
 
+
+# TODO
+#Create a User class for table user with id username password  columns
+## and blogs column to map relationship between user table n blog table
+
 class User(db.Model):                                         #Add User Class---- COVERED
     id = db.Column(db.Integer, primary_key=True)
     username  = db.Column(db.String(120),unique=True)
@@ -31,16 +40,25 @@ class User(db.Model):                                         #Add User Class---
         self.username =username
         self.password=password
 
+
+# TODO
+# Create Function for user Login
 @app.route('/login', methods=['POST', 'GET'])
 def login():
 
     passworderror=''
-    user_error=''
+    username=''
+    usernameerror=''
     if request.method=='POST':
         username=request.form['username'] # dictionary that contains post request
         password=request.form['password']
         user=User.query.filter_by(username=username).first() # Query to retieve that valid user
-        # not valid then will return spl vatiable called none
+        # not valid then will return spl variable called none
+
+        # TODO
+        # #validate the user
+        # #create a session to remember him for this particular login
+
         if user and user.password== password: # does user exists
             #TODO remember user logged in
             session['username']=username  # session is an object that is used to store
@@ -49,14 +67,21 @@ def login():
             flash('logged in '+username)
                                          # todo A Note About Use Cases --covered
             return redirect('/newpost') # return to newpost page
-        elif user and user.password != password:
+
             # todo login failed
+        elif user and user.password != password:
             passworderror='Your password is incorrect'
 
         else: #user is not None and user.username != username:  # when user name is not exists
-            flash('user does not exists')
-            #user_error='Username does not exists'
-    return render_template('login.html',passworderror=passworderror) #user_error=user_error)
+            usernameerror='user does not exists'
+
+    return render_template('login.html',passworderror=passworderror, usernameerror=usernameerror)
+
+
+# TODO
+# Logout the user
+# and delete his session.
+#redirect to main blog page- /blog
 
 @app.route("/logout")  #TODO add a require_login function and decorate it with @app.before_request
 def logout():
@@ -72,8 +97,13 @@ def validate(fieldname, fieldval, fieldlen):
         msg = "Please enter a valid " + fieldname
     return msg
 
+# TODO
+##Signup() to create an account
+# In post method do user entered field validation and display appropriate error msgs on signup.html
+
+
 @app.route('/signup', methods=['POST', 'GET'])
-def signup():      #create account
+def signup():
 
     if request.method=='POST':
         username = request.form['username']
@@ -86,6 +116,7 @@ def signup():      #create account
         password_error = validate("password", password, password_length)
         confirmpassword_error = ''
 
+
         if not password == confirm_password or confirm_password.strip() == "":
             confirmpassword_error = "Passwords do not match"
 
@@ -95,9 +126,10 @@ def signup():      #create account
         if user is not None and user.username == username:
             username_error="User already exists"
 
+        # Valid user craete a session and send to newpost page
+
         if not username_error and not password_error and not confirmpassword_error:
-            #return render_template('welcome_page.html', name=user_name)
-            new_user=User(username, password)# create new
+            new_user=User(username, password)# create new user
             db.session.add(new_user)
             db.session.commit()
             session['username']=username
@@ -110,7 +142,10 @@ def signup():      #create account
                                    confirmpassword_error=confirmpassword_error)
     return render_template('signup.html')
 
-
+# TODO
+#display all entries when user is on /blog blog.html
+# when user clicks on a blog entry , then get that blog id and display in BlogEntryDetails.html page
+# Display blog author username at the bottom
 
 @app.route('/blog', methods=['GET'])
 def blogdetails():
